@@ -1,10 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 
 export default function Home() {
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<{ status: number; data: Record<string, unknown> } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -12,7 +11,7 @@ export default function Home() {
     setLoading(true);
     setError(null);
     try {
-      const headers = withToken 
+      const headers: HeadersInit = withToken 
         ? { 'Authorization': 'Bearer vercel-lab-token' }
         : {};
       
@@ -23,8 +22,8 @@ export default function Home() {
         status: response.status,
         data: data
       });
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setLoading(false);
     }
@@ -100,7 +99,7 @@ export default function Home() {
           <div>
             <h3 className="text-lg font-medium mb-2">With Valid Token</h3>
             <pre className="bg-gray-100 dark:bg-zinc-800 p-3 rounded-md overflow-auto">
-              curl -H "Authorization: Bearer vercel-lab-token" https://your-deployed-url.vercel.app/api/secure-data
+              curl -H &quot;Authorization: Bearer vercel-lab-token&quot; https://your-deployed-url.vercel.app/api/secure-data
             </pre>
           </div>
           <div>
